@@ -18,7 +18,7 @@ def write_csv(filename):
 # get list of url
 speechs_url = []
 
-with open('speechs_url.csv', 'r') as file:
+with open('speechs_url_2.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
       speechs_url.append(row)
@@ -29,17 +29,16 @@ for url in speechs_url[0]:
   data = [['date', 'title', 'speech']]
   print(f'sraping {url}')
   url = url
-  page = requests.get(url)
+  page = requests.get(url, verify=False)
   soup = BeautifulSoup(page.content,"html.parser")
-  title = soup.find('h1', class_='documentFirstHeading').text
-  date = soup.find("span", class_="value").text
+  title = soup.find(id='main_ltTitulo').text
+  date = soup.find(id='main_ltFEcha').text
   published  = f'Publicado em {date}'
-  print(published)
-  speech = soup.find(id='parent-fieldname-text').text
+  speech = soup.find('div', class_='texto-bloque').text
   filename = date[:10].replace("/", "") + ".csv"
   data.append([date, title, speech])
   write_csv(filename)
-  time.sleep(5)
+  time.sleep(10)
 
 
 
